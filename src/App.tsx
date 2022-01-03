@@ -9,44 +9,8 @@ import { TabPanel, a11yProps } from "./components/TabPanel";
 import ItemCard from "./components/ItemCard";
 import AddIcon from "@material-ui/icons/Add";
 import AddModal from "./components/modals/AddModal";
-
-const data = [
-  {
-    id: 1,
-    title: "Make a meal",
-    description: "lorem ipsum",
-    status: 0,
-    createdAt: "2019-11-15 18:00",
-  },
-  {
-    id: 2,
-    title: "Dinner with family",
-    description: "lorem ipsum",
-    status: 0,
-    createdAt: "2019-11-16 18:00",
-  },
-  {
-    id: 3,
-    title: "Watch scary movie",
-    description: "lorem ipsum",
-    status: 0,
-    createdAt: "2019-11-15 13:00",
-  },
-  {
-    id: 4,
-    title: "Learn something new",
-    description: "lorem ipsum",
-    status: 1,
-    createdAt: "2019-11-15 08:00",
-  },
-  {
-    id: 5,
-    title: "Make a phone call to mom",
-    description: "lorem ipsum",
-    status: 1,
-    createdAt: "2019-11-15 04:00",
-  },
-];
+import { useAppSelector } from "./redux/hooks";
+import TaskList from "./components/TaskList";
 
 const useStyles = makeStyles({
   root: {
@@ -56,6 +20,9 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
+
+  const { task } = useAppSelector((state) => state.task);
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -91,12 +58,10 @@ function App() {
               Add Task
             </Button>
           </div>
-          {data.map((item) => (
-            <ItemCard data={item} />
-          ))}
+          <TaskList tasks={task} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {/* <ItemCard /> */}
+          <TaskList tasks={task} status="complete" />
         </TabPanel>
       </Paper>
     </>

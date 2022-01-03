@@ -17,6 +17,9 @@ import {
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 import { ITask } from "../../typings/Task";
+import { useAppDispatch } from "../../redux/hooks";
+import { updateTask } from "../../redux/task";
+import formatDate from "../../utils/formatDate";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Insert title"),
@@ -35,6 +38,7 @@ const UpdateModal: FunctionComponent<UpdateModalProps> = ({
   open,
   handleClose,
 }) => {
+  const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -44,8 +48,16 @@ const UpdateModal: FunctionComponent<UpdateModalProps> = ({
     validationSchema: validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: ({ title, description, date }) => {
+      dispatch(
+        updateTask({
+          id: data.id,
+          status: data.status,
+          title,
+          description,
+          createdAt: formatDate(date),
+        })
+      );
       handleClose();
     },
   });
@@ -56,6 +68,7 @@ const UpdateModal: FunctionComponent<UpdateModalProps> = ({
       formik.setFieldValue("description", data.description);
       formik.setFieldValue("date", data.createdAt);
     }
+    // eslint-disable-next-line
   }, [open]);
 
   return (

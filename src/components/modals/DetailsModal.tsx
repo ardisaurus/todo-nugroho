@@ -1,5 +1,4 @@
 import Typography from "@material-ui/core/Typography";
-import ScheduleIcon from "@material-ui/icons/Schedule";
 import DialogTitle from "./customs/DialogTitle";
 import DialogContent from "./customs/DialogContent";
 import DialogActions from "./customs/DialogActions";
@@ -10,6 +9,8 @@ import UpdateIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FunctionComponent } from "react";
 import { ITask } from "../../typings/Task";
+import { useAppDispatch } from "../../redux/hooks";
+import { switchStatusTask } from "../../redux/task";
 
 interface DetailsModalProps {
   data: ITask;
@@ -26,6 +27,10 @@ const DetailsModal: FunctionComponent<DetailsModalProps> = ({
   handleOpenUpdate,
   handleOpenDelete,
 }) => {
+  const dispatch = useAppDispatch();
+  const handleSwitchStatus = () => {
+    dispatch(switchStatusTask(data));
+  };
   return (
     <Dialog
       onClose={handleClose}
@@ -46,12 +51,12 @@ const DetailsModal: FunctionComponent<DetailsModalProps> = ({
       <DialogActions>
         <Button
           autoFocus
-          onClick={handleClose}
-          color="primary"
+          onClick={handleSwitchStatus}
+          color={data.status === 0 ? "primary" : "default"}
           variant="contained"
           startIcon={<CheckIcon />}
         >
-          Mark as Complete
+          Mark as {data.status === 0 ? "C" : "Inc"}omplete
         </Button>
         <Button
           onClick={handleOpenUpdate}
@@ -61,14 +66,16 @@ const DetailsModal: FunctionComponent<DetailsModalProps> = ({
         >
           Update
         </Button>
-        <Button
-          onClick={handleOpenDelete}
-          color="secondary"
-          variant="contained"
-          startIcon={<DeleteIcon />}
-        >
-          Delete
-        </Button>
+        {data.status === 0 && (
+          <Button
+            onClick={handleOpenDelete}
+            color="secondary"
+            variant="contained"
+            startIcon={<DeleteIcon />}
+          >
+            Delete
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
