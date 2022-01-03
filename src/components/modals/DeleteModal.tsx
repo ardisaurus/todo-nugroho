@@ -6,16 +6,27 @@ import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FunctionComponent } from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import { removeTask } from "../../redux/task";
 
 interface DeleteModalProps {
+  id: number;
   open: boolean;
   handleClose: () => void;
 }
 
 const DeleteModal: FunctionComponent<DeleteModalProps> = ({
+  id,
   open,
   handleClose,
 }) => {
+  const dispatch = useAppDispatch();
+
+  const handleDelete = () => {
+    dispatch(removeTask(id));
+    handleClose();
+  };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -33,7 +44,7 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
       <DialogActions>
         <Button
           autoFocus
-          onClick={handleClose}
+          onClick={handleDelete}
           color="secondary"
           variant="contained"
           startIcon={<DeleteIcon />}

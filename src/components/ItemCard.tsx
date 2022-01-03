@@ -53,6 +53,7 @@ const ItemCard: FunctionComponent<ItemCardProps> = ({ data }) => {
         open={openModal === "update"}
       />
       <DeleteModal
+        id={data.id}
         handleClose={handleCloseModal}
         open={openModal === "delete"}
       />

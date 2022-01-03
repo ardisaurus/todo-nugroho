@@ -16,7 +16,10 @@ import {
   KeyboardDatePicker,
   KeyboardTimePicker,
 } from "@material-ui/pickers";
-import { v4 as uuid } from "uuid";
+import { useAppDispatch } from "../../redux/hooks";
+import { addTask } from "../../redux/task";
+import RandomNumber from "../../utils/randomNumber";
+import formatDate from "../../utils/formatDate";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Insert title"),
@@ -33,6 +36,8 @@ const UpdateModal: FunctionComponent<UpdateModalProps> = ({
   open,
   handleClose,
 }) => {
+  const dispatch = useAppDispatch();
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -42,9 +47,17 @@ const UpdateModal: FunctionComponent<UpdateModalProps> = ({
     validationSchema: validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: (values) => {
-      console.log(uuid());
-      console.log(values);
+    onSubmit: ({ title, description, date }, { resetForm }) => {
+      dispatch(
+        addTask({
+          id: RandomNumber(),
+          status: 0,
+          title,
+          description,
+          createdAt: formatDate(date),
+        })
+      );
+      resetForm();
       handleClose();
     },
   });
@@ -86,7 +99,7 @@ const UpdateModal: FunctionComponent<UpdateModalProps> = ({
                 disableToolbar
                 variant="inline"
                 name="date"
-                format="MM/dd/yyyy"
+                format="dd/MM/yyyy"
                 margin="normal"
                 id="date-picker-inline"
                 label="Date"
